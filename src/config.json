@@ -1,0 +1,91 @@
+{
+  "name": "AWS ELB",
+  "type": "executer",
+  "imgUrl": "logo.png",
+  "execProgram": "node",
+  "main": "app.js",
+  "version": "1.0.0",
+  "description": "Works with AWS ELB API",
+  "settings":[
+    {
+      "name": "accessKeyId",
+      "viewName": "AWS Access Key ID",
+      "type": "string"
+    },
+    {
+      "name": "secretAccesKey",
+      "viewName": "AWS Secret Access Key",
+      "type": "vault"
+    }
+  ],
+  "methods": [
+    {
+      "name": "createLoadBalancer",
+      "viewName": "Create Load Balancer",
+      "params": [
+        {
+          "name": "accessKeyId",
+          "viewName": "AWS Access Key ID",
+          "type": "string"
+        },
+        {
+          "name": "secretAccesKey",
+          "viewName": "AWS Secret Access Key",
+          "type": "vault"
+        },
+        {
+          "name": "region",
+          "viewName": "AWS Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "getRegions"
+        },
+        {
+          "name": "name",
+          "viewName": "Name",
+          "type": "string"
+        },
+        {
+          "name": "listeners",
+          "viewName": "Listeners",
+          "type": "text"
+        },
+        {
+          "name": "scheme",
+          "viewName": "Scheme",
+          "type": "options",
+          "options": [
+            {
+              "id": "Internet Facing",
+              "name": "Inernet Facing"
+            },
+            {
+              "id": "Internal",
+              "name": "Internal"
+            }
+          ]
+        },
+        {
+          "name": "availabilityZones",
+          "viewName": "Availability Zones",
+          "type": "text"
+        },
+        {
+          "name": "subnets",
+          "viewName": "Subnets",
+          "type": "text"
+        },
+        {
+          "name": "securityGroups",
+          "viewName": "Security Groups",
+          "type": "text"
+        },
+        {
+          "name": "tags",
+          "viewName": "Tags",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
