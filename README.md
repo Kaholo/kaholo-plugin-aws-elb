@@ -6,7 +6,7 @@ Kaholo integration with AWS ELB API.
 2. Secret Access Key (Vault) **Optional** - The Secret Access Key to use on default.
 
 ## Method: Create Load Balancer
-Create a new load balancer on AWS ELB. 
+Create a new load balancer on AWS ELB. You can see more info on this method [here](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ELB.html#createLoadBalancer-property).
 
 ### Parameters
 1. Access Key ID(string) **Optional** - The Access Key ID to use to authenticate.
