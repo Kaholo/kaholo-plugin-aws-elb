@@ -1,16 +1,19 @@
 let aws = require("aws-sdk");
 
 function getAwsClient(action, settings){
-    const keyId = action.params.AWS_ACCESS_KEY_ID || settings.AWS_ACCESS_KEY_ID;
-    const secret = action.params.AWS_SECRET_ACCESS_KEY || settings.AWS_SECRET_ACCESS_KEY;
+    const keyId = action.params.accessKeyId || settings.accessKeyId;
+    const secret = action.params.secretAccesKey || settings.secretAccesKey;
+    const region = parseAutoComplete(action.params.region);
     let config = {
         accessKeyId: keyId,
-        secretAccessKey: secret
-    }
-    if (action.params.REGION){
-        config.region = action.params.REGION.id
+        secretAccessKey: secret,
+        region: region
     }
     return new aws.ELB(config);
+}
+
+function parseAutoComplete(param){
+    return param.id ? param.id : param;
 }
 
 function getAwsCallback(resolve, reject){
@@ -35,7 +38,7 @@ function parseArr(param){
 
 function checkListeners(param){
     if (!param){
-        return [];
+        throw "Listeners can't be emtpy!"
     } 
     if (!Array.isArray(param)){
         throw "Can't parse listeners with a different format than an array";
