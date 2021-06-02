@@ -20,7 +20,7 @@ Create a new load balancer on AWS ELB. You can see more info on this method [her
 * InstanceProtocol: 'STRING_VALUE',
 * SSLCertificateId: 'STRING_VALUE'
 6. Scheme (Options) **Optional** - The type of a load balancer. Can be either Internet Facing or Internal. Default is Internet Facing.
-7. Availability Zones (Array/Text) **Required** - One or more Availability Zones from the same region as the load balancer. To enter multiple values seperate each with a new line.
-8. Subnets (Array/Text) **Required** - The IDs of the subnets in your VPC to attach to the load balancer. **Can't specify Both Subnets and Availabilty Zones!**. To enter multiple values seperate each with a new line. Also accepts getting an array value from code.
+7. Availability Zones (Array/Text) **Optional** - One or more Availability Zones from the same region as the load balancer. To enter multiple values seperate each with a new line.
+8. Subnets (Array/Text) **Optional** - The IDs of the subnets in your VPC to attach to the load balancer. **Can't specify Both Subnets and Availabilty Zones!**. To enter multiple values seperate each with a new line. Also accepts getting an array value from code.
 9. Security Groups (Array/Text) **Optional** - The IDs of the security groups to assign to the load balancer. To enter multiple values seperate each with a new line. Also accepts getting an array value from code.
 10. Tags (Array of objects/Text) **Optional** - Tags to assign to the load balancer. You can see more information about tagging your load balancer [here](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/add-remove-tags.html). Enter each tag in the format of Key=Value. Also accepts Tags in the format of just Key. To enter multiple values seperate each with a new line. Also accepts getting an array of objects in the form of { Key, Value } or { Key }. 
