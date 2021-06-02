@@ -1,0 +1,14 @@
+{
+  "name": "kaholo-plugin-aws-elb",
+  "version": "1.0.0",
+  "description": "AWS ELB API plugin for kaholo",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kaholo Team(Amit Alon)",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.919.0"
+  }
+}
