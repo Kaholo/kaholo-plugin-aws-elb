@@ -1,6 +1,6 @@
 let aws = require("aws-sdk");
 
-function getAwsClient(action, settings){
+function getAwsClient(action, settings, version=2){
     const keyId = action.params.accessKeyId || settings.accessKeyId;
     const secret = action.params.secretAccesKey || settings.secretAccesKey;
     const region = parseAutoComplete(action.params.region);
@@ -9,7 +9,7 @@ function getAwsClient(action, settings){
         secretAccessKey: secret,
         region: region
     }
-    return new aws.ELB(config);
+    return new aws.ELBv2(config);
 }
 
 function parseAutoComplete(param){
@@ -31,7 +31,7 @@ function parseArr(param){
         return param;
     }
     if (typeof(param) === "string"){
-        return param.split("/n").map(line=>line.trim()).filter(line=>line);
+        return param.split("\n").map(line=>line.trim()).filter(line=>line);
     }
     throw "Unsupprted array format"
 }
