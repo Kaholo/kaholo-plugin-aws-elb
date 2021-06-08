@@ -4,7 +4,7 @@
   "imgUrl": "logo.png",
   "execProgram": "node",
   "main": "app.js",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Works with AWS ELB API",
   "settings":[
     {
@@ -46,29 +46,38 @@
           "type": "string"
         },
         {
-          "name": "listeners",
-          "viewName": "Listeners",
-          "type": "text"
-        },
-        {
           "name": "scheme",
           "viewName": "Scheme",
           "type": "options",
           "options": [
             {
-              "id": "Internet Facing",
-              "name": "Inernet Facing"
+              "id": "internet-facing",
+              "name": "internet-facing"
             },
             {
-              "id": "Internal",
-              "name": "Internal"
+              "id": "internal",
+              "name": "internal"
             }
           ]
         },
         {
-          "name": "availabilityZones",
-          "viewName": "Availability Zones",
-          "type": "text"
+          "name": "type",
+          "viewName": "Type",
+          "type": "options",
+          "options": [
+            {
+              "id": "application",
+              "name": "application"
+            },
+            {
+              "id": "network",
+              "name": "network"
+            },
+            {
+              "id": "gateway",
+              "name": "gateway"
+            }
+          ]
         },
         {
           "name": "subnets",
@@ -84,6 +93,218 @@
           "name": "tags",
           "viewName": "Tags",
           "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "createListeners",
+      "viewName": "Create Forward Listeners",
+      "params": [
+        {
+          "name": "accessKeyId",
+          "viewName": "AWS Access Key ID",
+          "type": "string"
+        },
+        {
+          "name": "secretAccesKey",
+          "viewName": "AWS Secret Access Key",
+          "type": "vault"
+        },
+        {
+          "name": "region",
+          "viewName": "AWS Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "getRegions"
+        },
+        {
+          "name": "vpcId",
+          "viewName": "Target Group VPC ID",
+          "type": "string"
+        },
+        {
+          "name": "targetGroupPorts",
+          "viewName": "Target Group Ports",
+          "type": "text"
+        },
+        {
+          "name": "pathPatterns",
+          "viewName": "Forward Path Rule Patterns",
+          "type": "text"
+        },
+        {
+          "name": "defaultActions",
+          "viewName": "Default Actions",
+          "type": "string"
+        },
+        {
+          "name": "loadBalancerArn",
+          "viewName": "Load Balancer ARN",
+          "type": "string"
+        },
+        {
+          "name": "protocol",
+          "viewName": "Protocol",
+          "type": "options",
+          "options": [
+            {
+              "id": "HTTP",
+              "name": "HTTP"
+            },
+            {
+              "id": "HTTPS",
+              "name": "HTTPS"
+            }
+          ]
+        },
+        {
+          "name": "ports",
+          "viewName": "Listener Ports",
+          "type": "text"
+        },
+        {
+          "name": "sslPolicy",
+          "viewName": "SSL Policy",
+          "type": "string"
+        },
+        {
+          "name": "certificateArn",
+          "viewName": "Certificate ARN",
+          "type": "string"
+        },
+        {
+          "name": "tags",
+          "viewName": "Tags",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "describeListeners",
+      "viewName": "Describe Listeners",
+      "params": [
+        {
+          "name": "accessKeyId",
+          "viewName": "AWS Access Key ID",
+          "type": "string"
+        },
+        {
+          "name": "secretAccesKey",
+          "viewName": "AWS Secret Access Key",
+          "type": "vault"
+        },
+        {
+          "name": "region",
+          "viewName": "AWS Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "getRegions"
+        },
+        {
+          "name": "loadBalancerArn",
+          "viewName": "Load Balancer ARN",
+          "type": "string"
+        },
+        {
+          "name": "listenerArns",
+          "viewName": "Listener ARNs",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "createPathRule",
+      "viewName": "Create Path Rule",
+      "params": [
+        {
+          "name": "accessKeyId",
+          "viewName": "AWS Access Key ID",
+          "type": "string"
+        },
+        {
+          "name": "secretAccesKey",
+          "viewName": "AWS Secret Access Key",
+          "type": "vault"
+        },
+        {
+          "name": "region",
+          "viewName": "AWS Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "getRegions"
+        },
+        {
+          "name": "listenerArn",
+          "viewName": "Listener ARN",
+          "type": "string"
+        },
+        {
+          "name": "pathPattern",
+          "viewName": "Path Pattern",
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "viewName": "Priority",
+          "type": "string"
+        },
+        {
+          "name": "targetGroupArn",
+          "viewName": "Target Group Arn",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "createTargetGroup",
+      "viewName": "Create Target Group",
+      "params": [
+        {
+          "name": "accessKeyId",
+          "viewName": "AWS Access Key ID",
+          "type": "string"
+        },
+        {
+          "name": "secretAccesKey",
+          "viewName": "AWS Secret Access Key",
+          "type": "vault"
+        },
+        {
+          "name": "region",
+          "viewName": "AWS Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "getRegions"
+        },
+        {
+          "name": "name",
+          "viewName": "Name",
+          "type": "string"
+        },
+        {
+          "name": "port",
+          "viewName": "Port",
+          "type": "string"
+        },
+        {
+          "name": "protocol",
+          "viewName": "Protocol",
+          "type": "options",
+          "options": [
+            {
+              "id": "HTTP",
+              "name": "HTTP"
+            },
+            {
+              "id": "HTTPS",
+              "name": "HTTPS"
+            }
+          ]
+        },
+        {
+          "name": "vpcId",
+          "viewName": "VPC ID",
+          "type": "string"
         }
       ]
     }
