@@ -1,6 +1,6 @@
 let aws = require("aws-sdk");
 
-function getAwsClient(action, settings, version=2){
+function getAwsClient(action, settings){
     const keyId = action.params.accessKeyId || settings.accessKeyId;
     const secret = action.params.secretAccesKey || settings.secretAccesKey;
     const region = parseAutoComplete(action.params.region);
