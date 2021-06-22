@@ -1,17 +1,6 @@
 const { getRegions } = require("./autocomplete")
 const { getAwsClient, getAwsCallback, parseArr, checkListeners, parseTags } = require("./helpers");
 
-const defaultListenerActions = [
-  {
-      "Type": "fixed-response",
-      "FixedResponseConfig": {
-          "StatusCode": "403",
-          "ContentType": "text/plain",
-          "MessageBody": "Invalid Request"
-      }
-  }
-];
-
 async function createLoadBalancer(action, settings){
   const client = getAwsClient(action, settings);
   const params = {
@@ -27,27 +16,46 @@ async function createLoadBalancer(action, settings){
   if (action.params.tags){
     params.Tags = parseTags(action.params.tags);
   }
-  return new Promise((resolve, reject) => {
-    client.createLoadBalancer(params, getAwsCallback(resolve, reject));
-  });
+  let result = { createLoadBalancer: await new Promise((resolve, reject) => {
+      client.createLoadBalancer(params, getAwsCallback(resolve, reject));
+    })
+  }
+  if (action.params.createListeners){
+    action.params.loadBalancerArn = result.createLoadBalancer.LoadBalancers[0].LoadBalancerArn;
+    result = {
+      ...result,
+      ...(await createListeners(action, settings))
+    };
+  }
+  return result;
 }
 
 async function createListeners(action, settings){
   const defaultActions = parseArr(action.params.defaultActions);
+  const defaultListenerActions = [
+    {
+        "Type": "fixed-response",
+        "FixedResponseConfig": {
+            "StatusCode": "403",
+            "ContentType": "text/plain",
+            "MessageBody": "Invalid Request"
+        }
+    }
+  ];
   const params = {
     Protocol: action.params.protocol || "HTTP",
     LoadBalancerArn: action.params.loadBalancerArn,
     SslPolicy: action.params.sslPolicy,
     DefaultActions: defaultActions.length > 0 ? defaultActions : defaultListenerActions
   }
-  const ports = parseArr(action.params.ports);
-  if (!params.LoadBalancerArn || ports.length === 0){
+  const ports = parseArr(action.params.ports), tgPorts = parseArr(action.params.targetGroupPorts);
+  if (!params.LoadBalancerArn || ports.length === 0 || tgPorts.length === 0 || !action.params.vpcId){
     throw "One of the required parameters was not provided";
   }
+  if (ports.length !== tgPorts.length) throw "Ports and Target Groups Ports must be same length!"
   const results = {};
   if (action.params.vpcId && action.params.targetGroupPorts){
-    const targetGroupPorts = parseArr(action.params.targetGroupPorts);
-    results.createTargetGroups = await Promise.all(targetGroupPorts.map(port => {
+    results.createTargetGroups = await Promise.all(tgPorts.map(port => {
       action.params.port = port;
       action.params.name = `listener-${port}-${Date.now().toString()}`.substr(0, 32);
       return createTargetGroup(action, settings);
@@ -68,7 +76,6 @@ async function createListeners(action, settings){
     });
   }));
   if (action.params.pathPatterns && results.createTargetGroups){
-    
     const pathPatterns = parseArr(action.params.pathPatterns);
     results.createRules = await Promise.all(results.createTargetGroups.map((result, index) => {
       action.params.listenerArn = results.createListeners[index].Listeners[0].ListenerArn;

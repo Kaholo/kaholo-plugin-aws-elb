@@ -4,7 +4,7 @@
   "imgUrl": "logo.png",
   "execProgram": "node",
   "main": "app.js",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Works with AWS ELB API",
   "settings":[
     {
@@ -90,6 +90,56 @@
           "type": "text"
         },
         {
+          "name": "vpcId",
+          "viewName": "Target Group VPC ID",
+          "type": "string"
+        },
+        {
+          "name": "targetGroupPorts",
+          "viewName": "Target Group Ports",
+          "type": "text"
+        },
+        {
+          "name": "pathPatterns",
+          "viewName": "Forward Path Rule Patterns",
+          "type": "text"
+        },
+        {
+          "name": "defaultActions",
+          "viewName": "Default Actions",
+          "type": "string"
+        },
+        {
+          "name": "protocol",
+          "viewName": "Protocol",
+          "type": "options",
+          "options": [
+            {
+              "id": "HTTP",
+              "name": "HTTP"
+            },
+            {
+              "id": "HTTPS",
+              "name": "HTTPS"
+            }
+          ]
+        },
+        {
+          "name": "ports",
+          "viewName": "Listener Ports",
+          "type": "text"
+        },
+        {
+          "name": "sslPolicy",
+          "viewName": "SSL Policy",
+          "type": "string"
+        },
+        {
+          "name": "certificateArn",
+          "viewName": "Certificate ARN",
+          "type": "string"
+        },
+        {
           "name": "tags",
           "viewName": "Tags",
           "type": "text"
@@ -116,6 +166,11 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "getRegions"
+        },
+        {
+          "name": "createListeners",
+          "viewName": "Create Listeners",
+          "type": "boolean"
         },
         {
           "name": "vpcId",
