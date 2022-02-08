@@ -13,7 +13,7 @@
       "type": "vault"
     },
     {
-      "name": "secretAccesKey",
+      "name": "secretAccessKey",
       "viewName": "AWS Secret Access Key",
       "type": "vault"
     }
@@ -29,7 +29,7 @@
           "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -38,7 +38,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "name",
@@ -156,7 +156,7 @@
           "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -165,7 +165,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "createListeners",
@@ -244,7 +244,7 @@
           "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -253,7 +253,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "loadBalancerArn",
@@ -277,7 +277,7 @@
           "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -286,7 +286,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "listenerArn",
@@ -320,7 +320,7 @@
           "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -329,7 +329,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "name",

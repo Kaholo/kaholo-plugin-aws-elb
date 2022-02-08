@@ -2,7 +2,7 @@ let aws = require("aws-sdk");
 
 function getAwsClient(action, settings){
     const keyId = action.params.accessKeyId || settings.accessKeyId;
-    const secret = action.params.secretAccesKey || settings.secretAccesKey;
+    const secret = action.params.secretAccessKey || settings.secretAccessKey;
     const region = parseAutoComplete(action.params.region);
     let config = {
         accessKeyId: keyId,
@@ -10,6 +10,22 @@ function getAwsClient(action, settings){
         region: region
     }
     return new aws.ELBv2(config);
+}
+
+function getEc2(params, settings) {
+    return new aws.EC2({
+        region: parseAutoComplete(params.region) || settings.region,
+        accessKeyId: params.accessKeyId || settings.accessKeyId,
+        secretAccessKey: params.secretAccessKey || settings.secretAccessKey,
+    });
+}
+
+function getLightsail(params, settings) {
+    return new aws.Lightsail({
+        region: parseAutoComplete(params.region) || settings.region,
+        accessKeyId: params.accessKeyId || settings.accessKeyId,
+        secretAccessKey: params.secretAccessKey || settings.secretAccessKey,
+    });
 }
 
 function parseAutoComplete(param){
@@ -39,7 +55,7 @@ function parseArr(param){
 function checkListeners(param){
     if (!param){
         throw "Listeners can't be emtpy!"
-    } 
+    }
     if (!Array.isArray(param)){
         throw "Can't parse listeners with a different format than an array";
     }
@@ -73,5 +89,7 @@ module.exports = {
     getAwsCallback,
     parseArr,
     checkListeners,
+    getEc2,
+    getLightsail,
     parseTags
 }

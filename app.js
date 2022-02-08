@@ -1,4 +1,4 @@
-const { getRegions } = require("./autocomplete")
+const { listRegions } = require("./autocomplete")
 const { getAwsClient, getAwsCallback, parseArr, checkListeners, parseTags } = require("./helpers");
 
 async function createLoadBalancer(action, settings){
@@ -145,6 +145,6 @@ module.exports = {
   createTargetGroup,
   createListeners,
   // autocomplete
-  getRegions
+  listRegions
 };
 
