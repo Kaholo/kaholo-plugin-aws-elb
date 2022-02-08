@@ -4,16 +4,16 @@
   "imgUrl": "logo.png",
   "execProgram": "node",
   "main": "app.js",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Works with AWS ELB API",
   "settings": [
     {
       "name": "accessKeyId",
       "viewName": "AWS Access Key ID",
-      "type": "string"
+      "type": "vault"
     },
     {
-      "name": "secretAccesKey",
+      "name": "secretAccessKey",
       "viewName": "AWS Secret Access Key",
       "type": "vault"
     }
@@ -26,10 +26,10 @@
         {
           "name": "accessKeyId",
           "viewName": "AWS Access Key ID",
-          "type": "string"
+          "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -38,7 +38,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "name",
@@ -153,10 +153,10 @@
         {
           "name": "accessKeyId",
           "viewName": "AWS Access Key ID",
-          "type": "string"
+          "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -165,7 +165,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "createListeners",
@@ -241,10 +241,10 @@
         {
           "name": "accessKeyId",
           "viewName": "AWS Access Key ID",
-          "type": "string"
+          "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -253,7 +253,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "loadBalancerArn",
@@ -274,10 +274,10 @@
         {
           "name": "accessKeyId",
           "viewName": "AWS Access Key ID",
-          "type": "string"
+          "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -286,7 +286,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "listenerArn",
@@ -317,10 +317,10 @@
         {
           "name": "accessKeyId",
           "viewName": "AWS Access Key ID",
-          "type": "string"
+          "type": "vault"
         },
         {
-          "name": "secretAccesKey",
+          "name": "secretAccessKey",
           "viewName": "AWS Secret Access Key",
           "type": "vault"
         },
@@ -329,7 +329,7 @@
           "viewName": "AWS Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "getRegions"
+          "functionName": "listRegions"
         },
         {
           "name": "name",
