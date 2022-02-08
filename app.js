@@ -68,7 +68,7 @@ async function createListeners(action, settings){
   if (action.params.certificateArn){
     params.Certificates = [ {CertificateArn: action.params.certificateArn }];
   }
-  
+
   results.createListeners = await Promise.all(ports.map(port => {
     params.Port = port;
     return new Promise((resolve, reject) => {
@@ -102,7 +102,7 @@ async function describeListeners(action, settings){
 }
 
 async function createPathRule(action, settings){
-  if (!action.params.targetGroupArn || !action.params.pathPattern || 
+  if (!action.params.targetGroupArn || !action.params.pathPattern ||
       !action.params.priority || !action.params.listenerArn)
   {
     throw "One of the required parameters was not provided to createPathRule";
@@ -112,7 +112,7 @@ async function createPathRule(action, settings){
     ListenerArn: action.params.listenerArn,
     Priority: action.params.priority,
     Conditions:  [{
-      Field: "path-pattern", 
+      Field: "path-pattern",
       Values: [ action.params.pathPattern ]
     }],
     Actions: [{
@@ -127,7 +127,6 @@ async function createPathRule(action, settings){
 
 async function createTargetGroup(action, settings){
   const client = getAwsClient(action, settings);
-  const 
   const params = {
     Name: action.params.name,
     Port: Number.parseInt(action.params.port),
