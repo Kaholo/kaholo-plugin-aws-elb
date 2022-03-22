@@ -1,99 +1,110 @@
-const { listRegions } = require("./autocomplete")
-const { getAwsClient, getAwsCallback, parseArr, checkListeners, parseTags } = require("./helpers");
+const { listRegions } = require("./autocomplete");
+const {
+  getAwsClient, getAwsCallback, parseArr, parseTags,
+} = require("./helpers");
 
-async function createLoadBalancer(action, settings){
+async function createLoadBalancer(action, settings) {
   const client = getAwsClient(action, settings);
   const params = {
     Name: (action.params.name || "").trim(),
     Subnets: parseArr(action.params.subnets),
     Scheme: action.params.scheme || "internet-facing",
     SecurityGroups: parseArr(action.params.securityGroups),
-    Type: action.params.type || "application"
+    Type: action.params.type || "application",
+  };
+  if (!params.Name || params.Subnets.length === 0) {
+    throw new Error("One of the required parameters was not provided");
   }
-  if (!params.Name ||  params.Subnets.length === 0){
-    throw "One of the required parameters was not provided";
-  }
-  if (action.params.tags){
+  if (action.params.tags) {
     params.Tags = parseTags(action.params.tags);
   }
-  let result = { createLoadBalancer: await new Promise((resolve, reject) => {
+  let result = {
+    createLoadBalancer: await new Promise((resolve, reject) => {
       client.createLoadBalancer(params, getAwsCallback(resolve, reject));
-    })
-  }
-  if (action.params.createListeners){
-    action.params.loadBalancerArn = result.createLoadBalancer.LoadBalancers[0].LoadBalancerArn;
+    }),
+  };
+  if (action.params.createListeners) {
+    const newAction = action;
+    newAction.params.loadBalancerArn = result.createLoadBalancer.LoadBalancers[0].LoadBalancerArn;
     result = {
       ...result,
-      ...(await createListeners(action, settings))
+      ...(await createListeners(newAction, settings)),
     };
   }
   return result;
 }
 
-async function createListeners(action, settings){
-  const defaultActions = parseArr(action.params.defaultActions);
+async function createListeners(action, settings) {
+  const newAction = action;
+  const defaultActions = parseArr(newAction.params.defaultActions);
   const defaultListenerActions = [
     {
-        "Type": "fixed-response",
-        "FixedResponseConfig": {
-            "StatusCode": "403",
-            "ContentType": "text/plain",
-            "MessageBody": "Invalid Request"
-        }
-    }
+      Type: "fixed-response",
+      FixedResponseConfig: {
+        StatusCode: "403",
+        ContentType: "text/plain",
+        MessageBody: "Invalid Request",
+      },
+    },
   ];
   const params = {
-    Protocol: action.params.protocol || "HTTP",
-    LoadBalancerArn: action.params.loadBalancerArn,
-    SslPolicy: action.params.sslPolicy,
-    DefaultActions: defaultActions.length > 0 ? defaultActions : defaultListenerActions
+    Protocol: newAction.params.protocol || "HTTP",
+    LoadBalancerArn: newAction.params.loadBalancerArn,
+    SslPolicy: newAction.params.sslPolicy,
+    DefaultActions: defaultActions.length > 0 ? defaultActions : defaultListenerActions,
+  };
+  const ports = parseArr(newAction.params.ports); const
+    tgPorts = parseArr(newAction.params.targetGroupPorts);
+  if (
+    !params.LoadBalancerArn
+    || ports.length === 0
+    || tgPorts.length === 0
+    || !newAction.params.vpcId
+  ) {
+    throw new Error("One of the required parameters was not provided");
   }
-  const ports = parseArr(action.params.ports), tgPorts = parseArr(action.params.targetGroupPorts);
-  if (!params.LoadBalancerArn || ports.length === 0 || tgPorts.length === 0 || !action.params.vpcId){
-    throw "One of the required parameters was not provided";
-  }
-  if (ports.length !== tgPorts.length) throw "Ports and Target Groups Ports must be same length!"
+  if (ports.length !== tgPorts.length) { throw new Error("Ports and Target Groups Ports must be same length!"); }
   const results = {};
-  if (action.params.vpcId && action.params.targetGroupPorts){
-    results.createTargetGroups = await Promise.all(tgPorts.map(port => {
-      action.params.port = port;
-      action.params.name = `listener-${port}-${Date.now().toString()}`.substr(0, 32);
-      return createTargetGroup(action, settings);
+  if (newAction.params.vpcId && newAction.params.targetGroupPorts) {
+    results.createTargetGroups = await Promise.all(tgPorts.map((port) => {
+      newAction.params.port = port;
+      newAction.params.name = `listener-${port}-${Date.now().toString()}`.substr(0, 32);
+      return createTargetGroup(newAction, settings);
     }));
   }
-  const client = getAwsClient(action, settings);
-  if (action.params.tags){
-    params.Tags = parseTags(action.params.tags);
+  const client = getAwsClient(newAction, settings);
+  if (newAction.params.tags) {
+    params.Tags = parseTags(newAction.params.tags);
   }
-  if (action.params.certificateArn){
-    params.Certificates = [ {CertificateArn: action.params.certificateArn }];
+  if (newAction.params.certificateArn) {
+    params.Certificates = [{ CertificateArn: newAction.params.certificateArn }];
   }
 
-  results.createListeners = await Promise.all(ports.map(port => {
+  results.createListeners = await Promise.all(ports.map((port) => {
     params.Port = port;
     return new Promise((resolve, reject) => {
       client.createListener(params, getAwsCallback(resolve, reject));
     });
   }));
-  if (action.params.pathPatterns && results.createTargetGroups){
-    const pathPatterns = parseArr(action.params.pathPatterns);
+  if (newAction.params.pathPatterns && results.createTargetGroups) {
+    const pathPatterns = parseArr(newAction.params.pathPatterns);
     results.createRules = await Promise.all(results.createTargetGroups.map((result, index) => {
-      action.params.listenerArn = results.createListeners[index].Listeners[0].ListenerArn;
-      action.params.targetGroupArn = result.TargetGroups[0].TargetGroupArn;
-      action.params.pathPattern = pathPatterns[index];
-      action.params.priority = index + 1;
-      return createPathRule(action, settings);
+      newAction.params.listenerArn = results.createListeners[index].Listeners[0].ListenerArn;
+      newAction.params.targetGroupArn = result.TargetGroups[0].TargetGroupArn;
+      newAction.params.pathPattern = pathPatterns[index];
+      newAction.params.priority = index + 1;
+      return createPathRule(newAction, settings);
     }));
   }
   return results;
 }
 
-async function describeListeners(action, settings){
+async function describeListeners(action, settings) {
   const client = getAwsClient(action, settings);
   const params = {
     LoadBalancerArn: action.params.loadBalancerArn,
-  }
-  if (action.params.listenerArns){
+  };
+  if (action.params.listenerArns) {
     params.ListenerArns = parseArr(action.params.listenerArns);
   }
   return new Promise((resolve, reject) => {
@@ -101,38 +112,37 @@ async function describeListeners(action, settings){
   });
 }
 
-async function createPathRule(action, settings){
-  if (!action.params.targetGroupArn || !action.params.pathPattern ||
-      !action.params.priority || !action.params.listenerArn)
-  {
-    throw "One of the required parameters was not provided to createPathRule";
+async function createPathRule(action, settings) {
+  if (!action.params.targetGroupArn || !action.params.pathPattern
+      || !action.params.priority || !action.params.listenerArn) {
+    throw new Error("One of the required parameters was not provided to createPathRule");
   }
   const client = getAwsClient(action, settings);
   const params = {
     ListenerArn: action.params.listenerArn,
     Priority: action.params.priority,
-    Conditions:  [{
+    Conditions: [{
       Field: "path-pattern",
-      Values: [ action.params.pathPattern ]
+      Values: [action.params.pathPattern],
     }],
     Actions: [{
       TargetGroupArn: action.params.targetGroupArn,
-      Type: "forward"
-    }]
-  }
+      Type: "forward",
+    }],
+  };
   return new Promise((resolve, reject) => {
     client.createRule(params, getAwsCallback(resolve, reject));
   });
 }
 
-async function createTargetGroup(action, settings){
+async function createTargetGroup(action, settings) {
   const client = getAwsClient(action, settings);
   const params = {
     Name: action.params.name,
-    Port: Number.parseInt(action.params.port),
+    Port: Number.parseInt(action.params.port, 10),
     Protocol: action.params.protocol || "HTTP",
-    VpcId: action.params.vpcId
-  }
+    VpcId: action.params.vpcId,
+  };
   return new Promise((resolve, reject) => {
     client.createTargetGroup(params, getAwsCallback(resolve, reject));
   });
@@ -145,6 +155,5 @@ module.exports = {
   createTargetGroup,
   createListeners,
   // autocomplete
-  listRegions
+  listRegions,
 };
-
