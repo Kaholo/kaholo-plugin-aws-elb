@@ -1,5 +1,6 @@
 {
-  "name": "AWS ELB",
+  "name": "aws-elb",
+  "viewName": "AWS ELB",
   "type": "executer",
   "imgUrl": "logo.png",
   "execProgram": "node",

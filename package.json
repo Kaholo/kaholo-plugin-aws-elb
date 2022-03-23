@@ -1,14 +1,20 @@
 {
   "name": "kaholo-plugin-aws-elb",
-  "version": "1.2.4",
   "description": "AWS ELB API plugin for kaholo",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jest .",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix"
   },
   "author": "Kaholo Team(Amit Alon)",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.919.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4"
   }
 }
